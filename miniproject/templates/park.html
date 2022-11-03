@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+            crossorigin="anonymous"></script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@200;300;400;500;600;700;900&display=swap"
+          rel="stylesheet">
+
+    <style>
+
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap');
+
+
+        body {
+            overflow-x: hidden;
+            overflow-y: auto;
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+
+        .layout {
+            margin-left: 100px;
+
+            width: 1024px;
+            /*border: 1px solid black;*/
+            /*border-radius: 30px;*/
+
+        }
+
+        .header {
+            padding-top: 10px;
+            width: 100%;
+            background-position: center;
+            background-size: cover;
+            color: black;
+        }
+
+        main {
+            background: #f2f4f7;
+            min-height: 700px;
+
+        }
+
+        .footer {
+            height: 310px;
+        }
+
+        .name {
+            width: 600px;
+            font-size: 40px;
+            font-weight: 700;
+            padding-top: 10px;
+            margin-left: 80px;
+            line-height: 80px;
+        }
+
+        .image {
+            max-width: 480px;
+            height: 600px;
+            margin-left: 30px;
+            border-radius: 30px;
+            margin-right: 40px;
+        }
+
+
+        .logo {
+            width: 200px;
+            position: relative;
+            float: right;
+            top: -76px;
+            margin-right: 30px;
+        }
+
+        .content {
+
+            height: 600px;
+            border-radius: 30px;
+            border: 1px dotted black;
+        }
+
+        .content-inside {
+            display: flex;
+            padding-top: 15px;
+            margin-left: 30px;
+        }
+
+        .contents {
+            width: 430px;
+            margin-left: 20px;
+            margin-top: 20px;
+            font-size: 25px;
+            color: grey;
+            font-weight: bold;
+        }
+
+        .contents-inside {
+            font-weight: normal;
+        }
+
+        a {
+            text-decoration: none;
+            color: grey;
+        }
+
+        a:hover {
+            color: gold;
+        }
+
+        .mypost {
+            max-width: 500px;
+            width: 95%;
+            margin: 20px auto 0px auto;
+
+            box-shadow: 0px 0px 5px 0px grey;
+            padding: 20px;
+            border: 1px solid black;
+        }
+
+
+        .btn.btn-dark {
+            margin-top: 15px;
+        }
+
+
+
+   .mybox {
+            width: 95%;
+            max-width: 700px;
+            padding: 20px;
+            box-shadow: 0px 0px 10px 0px lightblue;
+            margin: 20px auto;
+        }
+
+
+
+        .mybucket > input {
+            width: 70%;
+        }
+
+        .mybox > li {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+
+            margin-bottom: 10px;
+            min-height: 48px;
+        }
+
+        .mybox > li > h2 {
+            max-width: 75%;
+            font-size: 20px;
+            font-weight: 500;
+            margin-right: auto;
+            margin-bottom: 0px;
+        }
+
+        .mybox > li > h2.done {
+            text-decoration: line-through
+        }
+
+
+    </style>
+
+
+</head>
+<body>
+<div class="layout" id="layout">
+    <div class="header">
+        <div class="inside">
+            <h1 class="name">포기하지 않는 개발자 박정훈</h1>
+            <img class="logo" src="/static/img/logo.png">
+        </div>
+    </div>
+
+    <main>
+        <div class="content-inside">
+            <img class="image" src="/static/img/image.jpg">
+            <div class="content">
+                <p class="contents">이름 : <span class="contents-inside">박정훈</span></p>
+                <p class="contents">MBTI : <span class="contents-inside">ENFJ</span></p>
+                <p class="contents">장점 : <span class="contents-inside">도전을 두려워 하지 않고 즐긴다.</span></p>
+                <p class="contents">스타일 : <span class="contents-inside">팀원들의 의견을 잘 수용하고 <br>의사소통을 많이 하는 타입</span></p>
+                <p class="contents">목표 : <span class="contents-inside">피할 수 없으니 즐기며 일하는 <br>개발자가 되는 것</span></p>
+                <p class="contents">약속 : <span class="contents-inside">CS,알고리즘,자료구조 포기하지 말고 끝까지 완수</span></p>
+                <p class="contents">블로그 : <a href="https://velog.io/@dudaksdk3214"><span
+                        class="contents-inside">https://velog.io/@dudaksdk3214/
+                    <br></span></a></p>
+            </div>
+        </div>
+
+    </main>
+
+    <div class="footer">
+
+        <div class="mypost" id="mypost1">
+            <div class="form-floating mb-3">
+                <input type="text" class="form-control" id="name" placeholder="url">
+                <label for="name">방명록 이름</label>
+            </div>
+            <div class="form-floating">
+            <textarea class="form-control" placeholder="Leave a comment here" id="comment"
+                      style="height: 100px"></textarea>
+                <label for="comment">방명록 내용</label>
+            </div>
+            <button onclick="save_comment()" type="button" class="btn btn-dark">방명록 남기기</button>
+
+        </div>
+
+      <div class="mybox" id="comment-list">
+
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+    $(document).ready(function () {
+        show_comment()
+
+    });
+
+    function save_comment() {
+
+        let name = $("#name").val()
+        let comment = $("#comment").val()
+
+        $.ajax({
+            type: "POST",
+            url: "/notes",
+            data: {name_give: name, comment_give: comment},
+            success: function (response) {
+                alert(response["msg"])
+                window.location.reload()
+            }
+        })
+    }
+
+
+
+     //업데이트는 - > count값을 가져와서 백단으로 넘겨주고->백단에서 리스트를가져와 먼저 나타내준후에, ID값 변경하고, updatesave_comment 버튼으로 count값을 다시 포스트로 보냄
+     function update_comment(count) {
+        $('#mypost1').empty()
+        $.ajax({
+            type: "GET",
+            url: "/notes/update/" + count,
+            data: {},
+            success: function (response) {
+                let rows = response['comment']
+                for (let i = 0; i < rows.length; i++) {
+                    let count = rows[i]['count']
+                    let name = rows[i]['name']
+                    let comment = rows[i]['comment']
+                    let temp_html = `<div class="form-floating mb-3">
+                <textarea type="text" class="form-control" id="name1" placeholder="url">${name}</textarea>
+                <label for="name">방명록 이름</label>
+            </div>
+            <div class="form-floating">
+            <textarea class="form-control" placeholder="Leave a comment here" id="comment1"
+                      style="height: 100px">${comment}</textarea>
+                <label for="comment">방명록 내용</label>
+            </div>
+            <button onclick="updatesave_comment(${count})" type="button" class="btn btn-dark">방명록 수정하기</button>`
+
+                    $('#mypost1').append(temp_html)
+
+                }
+            }
+        });
+     }
+
+       //updatesave_comment값을 count를 넣어 가져오고,그것을 다시 POST맵핑으로, 바꾼 ID의 name값과,comment값을 가져옴. 이후 바뀐값을 POST 백단으로 넘겨주고 -->>
+       function updatesave_comment(count) {
+
+        let name = $("#name1").val()
+        let comment = $("#comment1").val()
+
+        $.ajax({
+            type: "POST",
+            url: "/notes/update/" +count,
+            data: {name_give: name, comment_give: comment},
+            success: function (response) {
+                alert(response["msg"])
+                window.location.reload()
+            }
+        })
+    }
+
+
+       function del_comment(count) {
+        //function = method 같이사용 / 파라미터 :어떤값을 가져오기 위해서 사용 (count=버튼의 ${count}를 가져옴, get 맵핑에선 data를 가져오는거라 data가 불필요 -> app.py로 count 값을 넘김
+        $.ajax({
+            type: "GET",
+            url: "/notes/delete/"+ count,
+
+            success: function (response) {
+                alert(response["msg"])
+                window.location.reload()
+            }
+        })
+    }
+
+
+    function show_comment() {
+        $.ajax({
+            type: "GET",
+            url: "/notes",
+            data: {},
+            success: function (response) {
+
+                let rows = response['comment']
+                for (let i = 0; i < rows.length; i++) {
+                    let count = rows[i]['count']
+                    let name = rows[i]['name']
+                    let comment = rows[i]['comment']
+                    let temp_html = `<li>
+                            <h2>✅ ${comment}</h2>
+                            <h3>이름: ${name}</h3>
+                            <button onclick="update_comment(${count})" type="button" class="btn btn-dark">수정</button>
+                            <button onclick="del_comment(${count})" type="button" class="btn btn-dark">삭제</button>
+                            </li>`
+
+                    $('#comment-list').append(temp_html)
+
+
+
+                }
+            }
+        });
+    }
+</script>
+
+</body>
+</html>

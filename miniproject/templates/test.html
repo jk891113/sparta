@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+            crossorigin="anonymous"></script>
+    <title>Document</title>
+    <script>
+        function show_reviews() {
+            $.ajax({
+                type: 'GET',
+                url: '/api/reviews/load/',
+                data: {},
+                success: function (response) {
+                    const review_edit = document.querySelector("#exampleModal");
+                    review_edit.addEventListener("show.bs.modal", function (event) {
+                        // 트리거 버튼 선택
+                        const triggerBtn = event.relatedTarget;
+
+                        // 데이터 가져오기
+                        const num = triggerBtn.getAttribute("data-bs-num");
+                        const nickname = triggerBtn.getAttribute("data-bs-nickname");
+                        const comment = triggerBtn.getAttribute("data-bs-comment");
+
+                        // 데이터 반영
+                        document.querySelector("#edit_nickname").value = nickname;
+                        document.querySelector("#edit_comment").value = comment;
+                    });
+                }
+            });
+        }
+    </script>
+</head>
+<body>
+<div class="box" id="cards-box">
+    <div class="card mb-3"><div class="card-body">
+               <blockquote class="blockquote mb-0">
+                   <p id=${id}>${text}</p>
+                   <div class="d-flex justify-content-between">
+                       <footer class="blockquote-footer">${name}</footer>
+                       <button class="btn btn-dark" onclick="">변경하기</button>
+                   </div>
+               </blockquote>
+           </div>
+    </div>
+</div>
+</body>
+</html>

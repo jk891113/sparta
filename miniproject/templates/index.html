@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
+    <title>보람"3"조</title>
+    <style>
+        *{
+            font-family: 'Jua', sans-serif;
+        }
+
+        .box {
+            margin: 0 auto;
+            width: 80%;
+        }
+
+        .cards-box {
+            border: 1px solid #000;
+            border-radius: 10px;
+        }
+
+        .card-img-top {
+            width: 100%;
+            height: 200px;
+
+            object-fit: cover;
+            object-position: center;
+        }
+
+        .post-box {
+            width: 40%;
+        }
+
+        .header-img {
+            width: 300px;
+            height: 150px;
+        }
+    </style>
+ <script>
+    $(document).ready(function () {
+        show_comment()
+
+    });
+
+    function save_comment() {
+
+        let name = $("#name").val()
+        let comment = $("#comment").val()
+
+        $.ajax({
+            type: "POST",
+            url: "/index/notes",
+            data: {name_give: name, comment_give: comment},
+            success: function (response) {
+                alert(response["msg"])
+                window.location.reload()
+            }
+        })
+    }
+
+
+
+     //업데이트는 - > count값을 가져와서 백단으로 넘겨주고->백단에서 리스트를가져와 먼저 나타내준후에, ID값 변경하고, updatesave_comment 버튼으로 count값을 다시 포스트로 보냄
+     function update_comment(count) {
+        $('#mypost1').empty()
+        $.ajax({
+            type: "GET",
+            url: "/index/notes/update/" + count,
+            data: {},
+            success: function (response) {
+                let rows = response['comment']
+                for (let i = 0; i < rows.length; i++) {
+                    let count = rows[i]['count']
+                    let name = rows[i]['name']
+                    let comment = rows[i]['comment']
+                    let temp_html = ` <textarea class="form-control" placeholder="Leave a comment here" id="comment1"
+                  style="height: 100px">${comment}</textarea>
+           <label for="comment">방명록 작성</label>
+       </div>
+       <div class="d-flex justify-content-between">
+           <div class="form-floating">
+               <textarea type="text" class="form-control" id="name1" placeholder="닉네임">${name}</textarea>
+               <label for="name">닉네임</label>
+           </div>
+
+            <button onclick="updatesave_comment(${count})" type="button" class="btn btn-dark">방명록 수정하기</button>`
+
+                    $('#mypost1').append(temp_html)
+
+                }
+            }
+        });
+     }
+
+       //updatesave_comment값을 count를 넣어 가져오고,그것을 다시 POST맵핑으로, 바꾼 ID의 name값과,comment값을 가져옴. 이후 바뀐값을 POST 백단으로 넘겨주고 -->>
+       function updatesave_comment(count) {
+
+        let name = $("#name1").val()
+        let comment = $("#comment1").val()
+
+        $.ajax({
+            type: "POST",
+            url: "/index/notes/update/" +count,
+            data: {name_give: name, comment_give: comment},
+            success: function (response) {
+                alert(response["msg"])
+                window.location.reload()
+            }
+        })
+    }
+
+
+       function del_comment(count) {
+        //function = method 같이사용 / 파라미터 :어떤값을 가져오기 위해서 사용 (count=버튼의 ${count}를 가져옴, get 맵핑에선 data를 가져오는거라 data가 불필요 -> app.py로 count 값을 넘김
+        $.ajax({
+            type: "GET",
+            url: "/index/notes/delete/"+ count,
+
+            success: function (response) {
+                alert(response["msg"])
+                window.location.reload()
+            }
+        })
+    }
+
+
+    function show_comment() {
+        $.ajax({
+            type: "GET",
+            url: "/index/notes",
+            data: {},
+            success: function (response) {
+
+                let rows = response['comment']
+                for (let i = 0; i < rows.length; i++) {
+                    let count = rows[i]['count']
+                    let name = rows[i]['name']
+                    let comment = rows[i]['comment']
+                    let temp_html = `
+       <div class="card mb-3 box">
+           <div class="card-body">
+               <blockquote class="blockquote mb-0">
+                   <p>${comment}</p>
+                   <footer class="blockquote-footer">${name}</footer>
+               </blockquote>
+               <button onclick="update_comment(${count})" type="button" class="btn btn-dark">수정</button>
+                            <button onclick="del_comment(${count})" type="button" class="btn btn-dark">삭제</button>
+           </div>
+       </div>
+
+                            </li>`
+
+                    $('#comment-list').append(temp_html)
+
+
+
+                }
+            }
+        });
+    }
+</script>
+
+</head>
+<body>
+    <div class="box mb-5"><a href="#"><img class="header-img" src="../static/img/logo.png"/></a></div>
+
+      <div class="d-flex flex-column box mb-5 p-3 ">
+            <div class="border border-1 border-dark mb-2 rounded-3 p-3">
+                <h2>목표</h2>
+                <ol>
+                    <li>포기하지 말자.</li>
+                    <li>서로 존중하자.</li>
+                    <li>질문을 두려워 하지 말자. </li>
+                    <li>하루 12시간 공부를 꼭 채우자. </li>
+                    <li>TIL / WIL을 꾸준히 쓰자. </li>
+                </ol>
+            </div>
+
+          <p>보람3조는 한 명 한 명 개성적이며 매력적인 멤버들이 모여있습니다.
+외향&내향, 감정&이성이 완벽하게 조화되어 서로에게 다양한 시각을 제공합니다.<br>
+개성 강한 팀원들이지만, 열정과 인내심만큼은 모두 **엄청난** 예비 백엔드 개발자들입니다.</p>
+
+            <div class="border border-dark border-1 rounded-3 p-3">
+                <h2>약속</h2>
+                <ol>
+                    <li>열정이 가득하다.</li>
+                    <li>E와 I / f와 t의 완벽한 조화</li>
+                    <li>인내심, 뚝심 있다.</li>
+                    <li>매력적임. </li>
+                    <li>낄낄빠빠 잘한다.</li>
+                </ol>
+            </div>
+        </div>
+
+    <!--        -->
+    <div class="box cards-box p-5 mb-5">
+        <div class="row row-cols-1 row-cols-md-4 g-4">
+            <div class="col">
+                <div class="card h-100">
+                    <img src="https://dthezntil550i.cloudfront.net/du/latest/du2011201805546660015257531/07100d66-66d2-4750-847d-af60b8b9b59c.jpg" class="card-img-top" alt="...">
+                    <div class="card-body">
+                        <h5 class="card-title"></h5>
+                        <p class="card-text"></p><br>
+                        <button type="button" onclick="location.href='/choi' ">프로필 보기</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card h-100">
+                    <img src="https://image.macadamia.kr/brand/20210908/20210908021322165.jpg" class="card-img-top" alt="...">
+                    <div class="card-body">
+                          <h5 class="card-title">코드몽키 박정훈</h5>
+                      <p class="card-text">현재 코드몽키 미래 아마존 개발자<br>개인목표: 알고리즘,자료구조,CS 심도깊게 이해하기</p><br>
+                        <button type="button" onclick="location.href='/park' ">프로필 보기</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card h-100">
+                    <img src="/static/img/커피.png" class="card-img-top" alt="...">
+                    <div class="card-body">
+                        <h5 class="card-title">한정규</h5>
+                        <p class="card-text">안녕하세요. 한정규입니다.</p>
+                        <button type="button" onclick="location.href='/han' ">프로필 보기</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card h-100">
+                    <img src="..." class="card-img-top" alt="...">
+                    <div class="card-body">
+                        <h5 class="card-title">Card title</h5>
+                        <p class="card-text">This is a longer card with supporting text below as a natural lead-in to
+                            additional content. This content is a little bit longer.</p>
+                        <button type="button" onclick="location.href='/lee' ">프로필 보기</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<!--    -->
+  <div class="box post-box border border-2 p-4 mb-5" id="mypost1">
+       <div class="form-floating mb-3" >
+        <textarea class="form-control" placeholder="Leave a comment here" id="comment"
+                  style="height: 100px"></textarea>
+           <label for="comment">방명록 작성</label>
+       </div>
+       <div class="d-flex justify-content-between">
+           <div class="form-floating">
+               <input type="text" class="form-control" id="name" placeholder="닉네임">
+               <label for="name">닉네임</label>
+           </div>
+
+           <button class="btn btn-dark" onclick="save_comment()">등록하기</button>
+       </div>
+   </div>
+<!-- 댓글    -->
+   <div class="box" id="comment-list">
+
+   </div>
+</body>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
+</html>

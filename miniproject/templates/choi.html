@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>최찬호</title>
+    <!-- CSS only -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
+    <style>
+        * {
+            font-family: 'Jua', sans-serif;
+        }
+
+        .box {
+            width: 80%;
+            margin: 20px auto;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .card-box {
+
+        }
+
+        .img {
+            width: 100%;
+            height: 100%;
+            background-image: url("https://dthezntil550i.cloudfront.net/du/latest/du2011201805546660015257531/07100d66-66d2-4750-847d-af60b8b9b59c.jpg");
+            background-position: center ;
+            background-size: cover;
+
+            border: 1px solid black;
+            flex: 1;
+        }
+
+        .accordion {
+            flex: 2;
+        }
+
+        .flex {
+            display:flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .min-height-300 {
+            height: 300px;
+            min-height: 312px;
+        }
+
+        .post-box {
+            padding: 20px;
+            border: 1px solid #000;
+        }
+
+        .space-between {
+            justify-content: space-between;
+        }
+
+        .accordion-body {
+           min-height: 152px;
+        }
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <script>
+
+    const posting = () => {
+            const name = $("#name").val().trim();
+            const text = $("#text").val().trim();
+
+            if (text === "" || name === "") {
+                alert("text And name must not be empty");
+                return;
+            }
+
+            $.ajax({
+            type: "POST",
+            url: "/api/notes",
+            data: { name, text },
+            success: ({msg}) => {
+                alert(`${msg}`);
+                window.location.reload();
+            }
+        })
+    }
+
+    const edit = (target) => {
+        const name = $("#name2").val();
+        const text = $("#text2").val();
+
+        $.ajax({
+            type: "POST",
+            url: `/api/notes/${target}`,
+            data: {name , text},
+            success: ({msg}) => {
+                alert(msg);
+                window.location.reload();
+            }
+        })
+    }
+
+    const remove = (target) => {
+          $.ajax({
+            type: "DELETE",
+            url: `/api/notes/${target}`,
+            data: {},
+            success: ({msg}) => {
+                alert(msg);
+                window.location.reload();
+            }
+          })
+    }
+
+    const edit_get = (target) => {
+    console.log(target)
+        $.ajax({
+            type: "GET",
+            url: `/api/notes/${target}`,
+            data: {},
+            success: ({data}) => {
+                 $("#cards-box").empty();
+
+                 for (d of data) {
+                    const id = d["id"];
+                    const name = d["name"];
+                    const text = d["text"];
+
+                    let tmp_html = "";
+
+                    if (id == target) {
+                          tmp_html = `<div class="card mb-3"><div class="card-body">
+                       <blockquote class="blockquote mb-0">
+                           <textarea id="text2" style="height: 100px"></textarea>
+                           <label for="text2">수정 작업</label>
+                           <div class="d-flex justify-content-between">
+                               <div class="form-floating">
+                                   <input type="text" class="form-control" id="name2" placeholder="닉네임">
+                                   <label for="name2">${name}</label>
+                               </div>
+                               <div>
+                               <button class="btn btn-dark" onclick="edit(${id})">변경완료</button>
+                               <button class="btn btn-dark" onclick="remove(${id})">삭제하기</button>
+                               </div>
+                           </div>
+                       </blockquote>
+                   </div></div>`
+
+                    $("#text2").val(text);
+                    $("#name2").val(name);
+                    } else {
+                          tmp_html = `<div class="card mb-3"><div class="card-body">
+                       <blockquote class="blockquote mb-0">
+                           <p>${text}</p>
+                           <div class="d-flex justify-content-between">
+                               <footer class="blockquote-footer">${name}</footer>
+                               <div>
+                               <button class="btn btn-dark" onclick=edit_get(${id})>변경하기</button>
+                               <button class="btn btn-dark" onclick="remove(${id}>삭제하기</button>
+                               </div>
+                           </div>
+                       </blockquote>
+                   </div></div>`;
+                    }
+
+                $("#cards-box").append(tmp_html);
+            }
+        }
+       })
+    }
+    $(document).ready(() => {
+        $.ajax({
+            type: "GET",
+            url: "/api/notes",
+            data: {},
+            success: ({data}) => {
+                for (d of data) {
+                    const id = d["id"];
+                    const name = d["name"];
+                    const text = d["text"];
+
+                    const tmp_html = `<div class="card mb-3"><div class="card-body">
+               <blockquote class="blockquote mb-0">
+                   <p>${text}</p>
+                   <div class="d-flex justify-content-between">
+                       <footer class="blockquote-footer">${name}</footer>
+                       <div>
+                       <button class="btn btn-dark" onclick="edit_get(${id})">변경하기</button>
+                       <button class="btn btn-dark" onclick="remove(${id})">삭제하기</button>
+                       </div>
+                   </div>
+               </blockquote>
+           </div></div>`;
+
+                $("#cards-box").append(tmp_html);
+                }
+            }
+        })
+    })
+    </script>
+</head>
+<body>
+   <div class="box text-center mb-5">
+       <h1 class="h1">보람3조 최찬호</h1>
+   </div>
+<!--   intro section    -->
+
+
+    <div class="box mb-5">
+        <div class="flex min-height-300">
+            <div class="img"></div>
+            <div class="accordion" id="accordionExample">
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingOne">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                            자기소개
+                        </button>
+                    </h2>
+                    <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne"
+                         data-bs-parent="#accordionExample">
+                        <ul class="accordion-body">
+                            <li>이름: 최찬호</li>
+                            <li>MBTI: INTP</li>
+                            <li>취미: 유튜브, 독서, 운동</li>
+                            <li>블로그: <a href="https://velog.io/@choibe" target="_blank">https://velog.io/@choibe</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingTwo">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                            자신의 스타일
+                        </button>
+                    </h2>
+                    <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo"
+                         data-bs-parent="#accordionExample">
+                        <ol class="accordion-body">
+                            <li> 정리를 잘 못하는 편이라 어지럽히는 걸 싫어합니다.</li>
+                            <li> 일할땐 일하고 놀땐 노는, 한번에 한가지 상황에만 집중하는 걸 좋아합니다.</li>
+                            <li> 같이 일하기 좋은사람은 일 잘하는 사람이라고 생각합니다.</li>
+                        </ol>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingThree">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                            장점
+                        </button>
+                    </h2>
+                    <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree"
+                         data-bs-parent="#accordionExample">
+                        <ul class="accordion-body">
+                            <li>항시 내가 필요로 하지만 가지고 있지 않은 것은 무엇인가 고민을 합니다.</li>
+                            <li>자신의 부족함을 인지하고 있기에, 정진하려 노력합니다.</li>
+                            <li>커뮤니케이션능력이 좋지못하여 저와 같은 분들의 마음을 조금이나마 이해할 수 있습니다.</li>
+                            <li>주어진 일은 능력안에서 최대한 해결하려 노력합니다.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<!--   방명록     -->
+
+   <div class="box post-box">
+       <div class="form-floating mb-3">
+        <textarea class="form-control" placeholder="Leave a comment here" id="text"
+                  style="height: 100px"></textarea>
+           <label for="text">방명록 작성</label>
+       </div>
+       <div class="flex space-between">
+           <div class="form-floating">
+               <input type="text" class="form-control" id="name" placeholder="닉네임">
+               <label for="name">닉네임</label>
+           </div>
+
+           <button class="btn btn-primary" onclick="posting()">등록하기</button>
+       </div>
+   </div>
+<!-- 댓글    -->
+   <div class="box" id="cards-box">
+<!--       <div class="card mb-3">-->
+<!--           <div class="card-body">-->
+<!--               <blockquote class="blockquote mb-0">-->
+<!--                   <p>${comment}</p>-->
+<!--                   <footer class="blockquote-footer">${nick}</footer>-->
+<!--               </blockquote>-->
+<!--           </div>-->
+<!--       </div>-->
+<!--       -->
+   </div>
+
+</body>
+<!-- JavaScript Bundle with Popper -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
+</html>
