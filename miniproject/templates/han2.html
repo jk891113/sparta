@@ -32,9 +32,11 @@
             padding: 10px 10px 0 10px;
         }
 
-        header > h1 {
-            background-color: white;
+        header > a > img {
+            width : 150px;
+
             margin-left: 10px;
+            margin-bottom: 10px;
         }
 
         .myhome {
@@ -192,7 +194,7 @@
             border: 3px solid black;
             border-radius: 10px;
 
-            margin: 20px auto auto auto;
+            margin: 20px auto 20px auto;
 
             box-shadow: 0 0 3px 0 black;
         }
@@ -264,6 +266,7 @@
             border-radius: 10px;
 
             margin: 20px auto 20px auto;
+            padding: 10px;
 
             display: none;
         }
@@ -274,12 +277,13 @@
             show_reviews();
         });
 
-        var myModal = document.getElementById('myModal')
-        var myInput = document.getElementById('myInput')
+        function open_edit() {
+            $('#edit-box').show()
+        }
 
-        myModal.addEventListener('shown.bs.modal', function () {
-          myInput.focus()
-        })
+        function close_edit() {
+            $('#edit-box').hide()
+        }
 
         function show_reviews() {
             $.ajax({
@@ -300,13 +304,10 @@
                                                     <p class="card-text">${comment}</p>
                                                     <span>No.${num}</span>
                                                     <div class="buttons">
-                                                        <button onclick="load_reviews(${num})" type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#exampleModal">수정
-                                                        </button>
+                                                        <button onclick="load_reviews(${num}); open_edit()" type="button" class="btn btn-dark">수정</button>
                                                         <button onclick="delete_reviews(${num})" type="button" class="btn btn-dark">삭제</button>
                                                     </div>
-                                                </div>
-                                            </div>
-                                        </div>`
+                                                    `
                         $('#review-box').append(temp_html)
                     }
                 }
@@ -314,7 +315,7 @@
         }
 
         function load_reviews(num) {
-
+            $('#edit-box').empty()
             $.ajax({
                 type: 'GET',
                 url: '/api/reviews/load/' + num,
@@ -326,16 +327,17 @@
                         let comment_load = rows[i]['comment']
                         let nickname_load = rows[i]['nickname']
                         console.log(num, comment_load, nickname_load)
-                        let temp_html = `<div id="editreviews">
-                                            <div class="form-floating">
-                                                    <textarea id="comment" class="form-control" placeholder="Leave a comment here"
-                                                              style="height: 100px">${comment_load}</textarea>
-                                                <label for="comment">방명록</label>
-                                            </div>
-                                            <div class="form-floating mb-3">
-                                                <input id="nickname" type="email" class="form-control" id="floatingInput" placeholder="Password" value="${nickname_load}">
-                                                <label for="floatingInput">닉네임</label>
-                                            </div>
+                        let temp_html = `<div>
+                                            <div class="mb-3">
+                                          <label for="exampleFormControlInput1" class="form-label">닉네임</label>
+                                          <input type="email" class="form-control" id="edit_nickname" value="${nickname_load}">
+                                        </div>
+                                        <div class="mb-3">
+                                          <label for="exampleFormControlTextarea1" class="form-label">방명록</label>
+                                          <textarea class="form-control" id="edit_comment" rows="3">${comment_load}</textarea>
+                                        </div>
+                                        <button onclick="close_edit()" type="button" class="btn btn-outline-dark" data-bs-dismiss="modal">닫기</button>
+                                        <button onclick="edit_reviews(${num})" type="button" class="btn btn-dark">수정하기</button>
                                         </div>`
                         console.log(num, comment_load, nickname_load)
                         $('#edit-box').append(temp_html)
@@ -343,8 +345,6 @@
                 }
             });
         }
-
-
 
         function save_reviews() {
             let comment = $('#comment').val()
@@ -371,6 +371,7 @@
                 data: {edit_comment_give: edit_comment, edit_nickname_give: edit_nickname},
                 success: function (response) {
                     alert(response["msg"])
+                    console.log(num, edit_nickname, edit_comment)
                     window.location.reload()
                 }
             });
@@ -393,10 +394,12 @@
 
 <body>
 <header>
-    <h1>보람삼조</h1>
+    <a href="/">
+        <img class="logo" src="/static/img/logo.png">
+    </a>
     <nav>
         <ul>
-            <button type="button" class="btn btn-dark">Main</button>
+            <a href="/"><button type="button" class="btn btn-dark">Main</button></a>
         </ul>
     </nav>
 </header>
@@ -489,8 +492,12 @@
         </div>
         <button onclick="save_reviews()" type="button" class="btn btn-dark">작성하기</button>
     </div>
-    <div id="review-box" class="showreviews"></div>
-    <div id="edit-box"></div>
+    <div id="review-box" class="showreviews">
+        <div id="edit-box" class="editreviews">
+
+        </div>
+    </div>
+
 </div>
 
 </body>

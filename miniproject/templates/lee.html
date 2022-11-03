@@ -28,8 +28,6 @@
             height: 100px;
             max-width: 1000px;
 
-            #background-color: gray;
-
             margin: 50px auto 50px auto;
 
 
@@ -41,16 +39,12 @@
         }
 
         .main_header > div {
-            #background-color: beige;
             color: black;
-
-            #margin: auto 10px auto 10px;
         }
 
         .myInfo {
             width: 70%;
             height: 1000px;
-            #background-color: gray;
             max-width: 1000px;
 
             margin: 20px auto 20px auto;
@@ -61,7 +55,6 @@
             width: 95%;
             height: 500px;
             margin: 20px auto 20px auto;
-            #background-color: beige;
 
             display: flex;
             flex-direction: column;
@@ -73,7 +66,7 @@
             width: 500px;
             height: 800px;
 
-            background-image: url("https://i.pinimg.com/736x/05/f4/d1/05f4d12861493b295fe84a0772212a35.jpg");
+            background-image: url("/static/img/siniticon.jpg");
             background-position: center;
             background-size: contain;
             background-repeat: no-repeat;
@@ -84,7 +77,6 @@
             height: 400px;
             max-width: 700px;
             margin: 10px auto 20px auto;
-            #background-color: beige;
 
             display: flex;
             justify-content: center;
@@ -96,7 +88,6 @@
             width: 95%;
             max-width: 500px;
             margin-top: 10px;
-            #background-color: white;
             text-align: center;
         }
 
@@ -147,7 +138,7 @@
 
             $.ajax({
                 type: 'POST',
-                url: '/notes',
+                url: '/comments',
                 data: {content_give: content, writer_give: writer},
                 success: function (response) {
                     alert(response['msg'])
@@ -159,7 +150,7 @@ window.location.reload()
         function show_comment() {
             $.ajax({
                 type: 'GET',
-                url: '/notes',
+                url: '/comments',
                 data: {},
                 success: function (response) {
                     let rows = response['comment']
@@ -235,15 +226,6 @@ window.location.reload()
 
 
 <div class="card_pack" id="comment-list">
-    <div class="card">
-        <div class="card-body">
-            <blockquote class="blockquote mb-0">
-                <p>앨범 내줘!!!</p>
-                <footer class="blockquote-footer">성시경 팬</footer>
-            </blockquote>
-        </div>
-    </div>
-
 </div>
 </body>
 </html>

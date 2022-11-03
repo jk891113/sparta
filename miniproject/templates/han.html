@@ -32,7 +32,7 @@
             padding: 10px 10px 0 10px;
         }
 
-        header > a> img {
+        header > a > img {
             width : 150px;
 
             margin-left: 10px;
@@ -54,7 +54,7 @@
 
         .myname {
             width: 90%;
-            max_width: 600px;
+            max_width: 400px;
 
             border: 3px solid black;
             border-radius: 10px;
@@ -266,8 +266,15 @@
             border-radius: 10px;
 
             margin: 20px auto 20px auto;
+            padding: 10px;
 
             display: none;
+        }
+        .buttons2 {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: right;
         }
 
     </style>
@@ -276,12 +283,13 @@
             show_reviews();
         });
 
-        var myModal = document.getElementById('myModal')
-        var myInput = document.getElementById('myInput')
+        function open_edit() {
+            $('#edit-box').show()
+        }
 
-        myModal.addEventListener('shown.bs.modal', function () {
-          myInput.focus()
-        })
+        function close_edit() {
+            $('#edit-box').hide()
+        }
 
         function show_reviews() {
             $.ajax({
@@ -302,8 +310,7 @@
                                                     <p class="card-text">${comment}</p>
                                                     <span>No.${num}</span>
                                                     <div class="buttons">
-                                                        <button onclick="load_reviews(${num})" type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#exampleModal">수정
-                                                        </button>
+                                                        <button onclick="load_reviews(${num}); open_edit()" type="button" class="btn btn-dark">수정</button>
                                                         <button onclick="delete_reviews(${num})" type="button" class="btn btn-dark">삭제</button>
                                                     </div>
                                                     `
@@ -314,7 +321,7 @@
         }
 
         function load_reviews(num) {
-
+            $('#edit-box').empty()
             $.ajax({
                 type: 'GET',
                 url: '/api/reviews/load/' + num,
@@ -326,30 +333,18 @@
                         let comment_load = rows[i]['comment']
                         let nickname_load = rows[i]['nickname']
                         console.log(num, comment_load, nickname_load)
-                        let temp_html = `<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                            <div class="modal-dialog">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h5 class="modal-title" id="exampleModalLabel">방명록 수정</h5>
-                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        <form>
-                                                            <div class="mb-3">
-                                                                <label for="recipient-name" class="col-form-label">닉네임</label>
-                                                                <input id="edit_nickname" type="text" class="form-control" value="${nickname_load}">
-                                                            </div>
-                                                            <div class="mb-3">
-                                                                <label for="message-text" class="col-form-label">방명록</label>
-                                                                <textarea id="edit_comment" class="form-control">${comment_load}</textarea>
-                                                            </div>
-                                                        </form>
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal">닫기</button>
-                                                        <button onclick="edit_reviews(${num})" type="button" class="btn btn-dark">수정하기</button>
-                                                    </div>
-                                                </div>
+                        let temp_html = `<div>
+                                            <div class="mb-3">
+                                                <label for="exampleFormControlInput1" class="form-label">닉네임</label>
+                                                <input type="email" class="form-control" id="edit_nickname" value="${nickname_load}">
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="exampleFormControlTextarea1" class="form-label">방명록</label>
+                                                <textarea class="form-control" id="edit_comment" rows="3">${comment_load}</textarea>
+                                            </div>
+                                            <div class="buttons2">
+                                            <button onclick="close_edit()" type="button" class="btn btn-outline-dark" data-bs-dismiss="modal" style="margin-right: 5px;">닫기</button>
+                                            <button onclick="edit_reviews(${num})" type="button" class="btn btn-dark">수정하기</button>
                                             </div>
                                         </div>`
                         console.log(num, comment_load, nickname_load)
@@ -358,8 +353,6 @@
                 }
             });
         }
-
-
 
         function save_reviews() {
             let comment = $('#comment').val()
@@ -386,6 +379,7 @@
                 data: {edit_comment_give: edit_comment, edit_nickname_give: edit_nickname},
                 success: function (response) {
                     alert(response["msg"])
+                    console.log(num, edit_nickname, edit_comment)
                     window.location.reload()
                 }
             });
@@ -408,12 +402,12 @@
 
 <body>
 <header>
-    <a href="index.html">
+    <a href="/">
         <img class="logo" src="/static/img/logo.png">
     </a>
     <nav>
         <ul>
-            <a href="index.html"><button type="button" class="btn btn-dark">Main</button></a/
+            <a href="/"><button type="button" class="btn btn-dark">Main</button></a>
         </ul>
     </nav>
 </header>
@@ -506,8 +500,12 @@
         </div>
         <button onclick="save_reviews()" type="button" class="btn btn-dark">작성하기</button>
     </div>
-    <div id="edit-box"></div>
-    <div id="review-box" class="showreviews"></div>
+    <div id="review-box" class="showreviews">
+        <div id="edit-box" class="editreviews">
+
+        </div>
+    </div>
+
 </div>
 
 </body>
